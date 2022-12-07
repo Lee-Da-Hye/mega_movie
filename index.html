@@ -139,6 +139,73 @@
             transform: translate(-50%, -50%) rotate(-45deg);
         }
     </style>
+    <style>
+        .select-container{
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+        .select-container.active .selected::after{
+            background: url(./images/caret-up-square-solid-24.png);
+        }
+        .select-container.active .options-container{
+            max-height: 240px;
+            opacity: 1;
+        }
+        .select-box{
+            display: flex;
+            width: 400px;
+            flex-direction: column;
+            order: 1;
+        }
+        .selected{
+            order: 0;
+            background-color: cadetblue;
+            color: #fff;
+            width: 100%;
+            border-radius: 8px;
+            height: 50px;
+            line-height: 50px;
+            position: relative;
+            cursor: pointer;
+            text-indent: 1em;
+        }
+        .selected::after{
+            content: '';
+            background: url(./images/caret-down-square-solid-24.png);
+            background-repeat: no-repeat;
+            display: block;
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            right: 10px;
+            top: 15px;
+        }
+        .select-box input{
+            display: none;
+        }
+        .options-container{
+            background-color: cadetblue;
+            color: #fff;
+            max-height: 0; 
+            opacity: 0;
+            
+            transition: all 0.4s;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .option{
+            height: 50px;
+            line-height: 50px;
+            cursor: pointer;
+            text-indent: 1em;
+        }
+        .option label{
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
     <!-- https://www.kobis.or.kr/kobisopenapi/homepg/apiservice/searchServiceInfo.do -->
@@ -162,6 +229,36 @@
             <i class='bx bx-search-alt'></i>
             <!-- <i class='bx bx-x-circle'></i> -->
             <input type="text" id="userInput" placeholder="검색어를 입력하세요">
+        </div>
+    </div>
+    <div class="select-container">
+        <div class="select-box">
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" class="radio" id="AllCategory" name="category">
+                    <label for="AllCategory">모두보기</label>
+                </div>
+                <div class="option">
+                    <input type="radio" class="radio" id="Mystery" name="category">
+                    <label for="Mystery">Mystery</label>
+                </div>
+                <div class="option">
+                    <input type="radio" class="radio" id="Thriller" name="category">
+                    <label for="Thriller">Thriller</label>
+                </div>
+                <div class="option">
+                    <input type="radio" class="radio" id="Biography" name="category">
+                    <label for="Biography">Biography</label>
+                </div>
+                <div class="option">
+                    <input type="radio" class="radio" id="Drama" name="category">
+                    <label for="Drama">Drama</label>
+                </div>
+            </div>
+            
+        </div>
+        <div class="selected">
+            영화 장르를 선택하세요.
         </div>
     </div>
     <div class="genre-container">
@@ -394,8 +491,44 @@
             
             
         }
+
     </script>
- 
+    <script>
+        const selected = document.querySelector('.selected');
+        const selectContainer = document.querySelector('.select-container');
+        
+        const options = document.querySelectorAll('.option');
+
+        selected.addEventListener('click', ()=>{
+            selectContainer.classList.toggle('active')
+        })
+
+        options.forEach((option)=>{
+            option.addEventListener('click', (event)=>{
+            selectContainer.classList.remove('active');
+            //option을 선택시 카테고리 닫기
+            //console.log(event.target.textContent);
+            //console.log(option.querySelector('label').innerHTML);
+            let optionText = option.querySelector('label').innerHTML;
+            selected.innerHTML = optionText;
+            //option 문자열을 제목에 표시
+            
+            //함수로 뺄 수 있음.
+            const searchMovies = searchGenre(optionText);
+            moviesContents.innerHTML = '';
+            if(optionText === "모두보기"){
+               allMovies.forEach((movie)=>{
+                    createDom(movie);
+            })
+            }else{
+                searchMovies.forEach((movie)=>{
+                createDom(movie);
+            })
+            
+            }
+        })
+    })
+    </script>
   <!-- 
      git에 업로드 할 예정임 
      검색
