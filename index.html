@@ -298,6 +298,7 @@
         const userInput = document.querySelector('#userInput');
         const bx = document.querySelector('.bx');
         const genreContainer = document.querySelector('.genre-container');
+        
         let allMovies = [];
 
         const URL = 'https://yts.mx/api/v2/list_movies.json';
@@ -350,7 +351,7 @@
             userInput.value = '';
 
             moviesContents.innerHTML = '';
-           movieList(allMovies);
+            movieList(allMovies);
         })
 
         bx.addEventListener('click', ()=>{
